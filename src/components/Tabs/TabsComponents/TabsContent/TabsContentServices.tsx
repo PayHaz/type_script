@@ -4,10 +4,9 @@ import React, { Component } from 'react'
 
 type Item = {
 	key: string
-	name: string
-	contact: string
-	jobTitle: string
-	address: string
+	serviceName: string
+	code: number
+	informationSystems: string
 }
 
 type State = {
@@ -29,24 +28,19 @@ type Response = {
 
 const columnsIsAuth: ColumnsType<Item> = [
 	{
-		title: 'ФИО',
-		dataIndex: 'name',
-		key: 'name',
+		title: 'Наименование',
+		dataIndex: 'serviceName',
+		key: 'serviceName',
 	},
 	{
-		title: 'Контакты',
-		dataIndex: 'contact',
-		key: 'contact',
+		title: 'Код',
+		dataIndex: 'code',
+		key: 'code',
 	},
 	{
-		title: 'Должность',
-		dataIndex: 'jobTitle',
-		key: 'jobTitle',
-	},
-	{
-		title: 'Адрес',
-		dataIndex: 'address',
-		key: 'address',
+		title: 'Информационная система',
+		dataIndex: 'informationSystems',
+		key: 'informationSystems',
 	},
 	{
 		title: 'Действие',
@@ -58,28 +52,23 @@ const columnsIsAuth: ColumnsType<Item> = [
 
 const columnsIsNotAuth: ColumnsType<Item> = [
 	{
-		title: 'ФИО',
-		dataIndex: 'name',
-		key: 'name',
+		title: 'Наименование',
+		dataIndex: 'serviceName',
+		key: 'serviceName',
 	},
 	{
-		title: 'Контакты',
-		dataIndex: 'contact',
-		key: 'contact',
+		title: 'Код',
+		dataIndex: 'code',
+		key: 'code',
 	},
 	{
-		title: 'Должность',
-		dataIndex: 'jobTitle',
-		key: 'jobTitle',
-	},
-	{
-		title: 'Адрес',
-		dataIndex: 'address',
-		key: 'address',
+		title: 'Информационная система',
+		dataIndex: 'informationSystems',
+		key: 'informationSystems',
 	},
 ]
 
-export default class TabsContent extends Component<{}, State> {
+export default class TabsContentServices extends Component<{}, State> {
 	state = {
 		items: [],
 		isAuth: true,
@@ -90,7 +79,7 @@ export default class TabsContent extends Component<{}, State> {
 	}
 
 	async requestAPI() {
-		return fetch(`http://localhost:1337/api/staff-tables`).then((data) => data.json())
+		return fetch(`http://localhost:1337/api/services-tables`).then((data) => data.json())
 	}
 
 	async backFunc() {
@@ -99,10 +88,9 @@ export default class TabsContent extends Component<{}, State> {
 		response.data.forEach((item) => {
 			items.push({
 				key: item.attributes.key,
-				name: item.attributes.name,
-				contact: item.attributes.contact,
-				jobTitle: item.attributes.jobTitle,
-				address: item.attributes.address,
+				serviceName: item.attributes.serviceName,
+				code: item.attributes.code,
+				informationSystems: item.attributes.informationSystems,
 			})
 		})
 		this.setState({ items })

@@ -1,5 +1,5 @@
 import React from 'react'
-import TabsComponents from '../tabs-components'
+import TabsComponents from '../Tabs/TabsComponents/TabsComponents'
 import './app.css'
 import 'antd/dist/antd.min.css'
 

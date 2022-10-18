@@ -1,10 +1,10 @@
 import { Button, Modal } from 'antd'
 import React, { useState } from 'react'
-import { SingInPanel } from '../sign-in-panel/sign-in-panel'
+import { SingInPanel } from '../SingInPanel/SingInPanel'
 
-import './sing-in-modal.css'
+import './SingInModal.css'
 
-const SingInModal: React.FC = () => {
+const SingInModal = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const showModal = () => {
