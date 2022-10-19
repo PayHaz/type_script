@@ -9,6 +9,8 @@ const initialState: CounterState = {
 	staffData: [],
 }
 
+type Key = String
+
 export const contentSlice = createSlice({
 	name: 'content',
 	initialState,
@@ -19,24 +21,23 @@ export const contentSlice = createSlice({
 		setAllItemsForStaffData: (state, item: PayloadAction<StaffItem[]>) => {
 			state.staffData = item.payload
 		},
-		// deleteItemForStaffData: (state, item: PayloadAction<StaffItem>) => {
-		// 	let index
+		deleteItemForStaffData: (state, item: PayloadAction<Key>) => {
+			let index = 0
 
-		// 	state.staffData.forEach((el, idx) => {
-		// 		if (el.key === item.payload.key) {
-		// 			index = idx
-		// 		}
+			state.staffData.forEach((el, idx) => {
+				if (el.key === item.payload) {
+					index = idx
+				}
+			})
 
-		// 		index = -1
-		// 	})
+			const newStaffData = [...state.staffData.slice(0, index), ...state.staffData.slice(index + 1)]
+			console.log('индекс удаляемого:', index)
 
-		// 	const newStaffData = state.staffData.slice(index, 1)
-
-		// 	state.staffData = newStaffData
-		// },
+			state.staffData = newStaffData
+		},
 	},
 })
 
-export const { pushNewItemToStaffData, setAllItemsForStaffData } = contentSlice.actions
+export const { pushNewItemToStaffData, setAllItemsForStaffData, deleteItemForStaffData } = contentSlice.actions
 
 export default contentSlice.reducer

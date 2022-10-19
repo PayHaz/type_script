@@ -62,6 +62,7 @@ const AddItemModal = ({ changedTab }: Props) => {
 	}
 
 	const handleCancel = () => {
+		
 		setIsModalOpen(false)
 	}
 
