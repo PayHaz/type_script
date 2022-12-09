@@ -1,11 +1,11 @@
 import { Button, Modal } from 'antd'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AddItemInfSystems } from './AddItemPanel/AddItemInfSystems'
 import AddItemStaff from './AddItemPanel/AddItemStaff'
 import { AddItemServers } from './AddItemPanel/AddItemServers'
 import { AddItemSoftware } from './AddItemPanel/AddItemSoftware'
 import { AddItemServices } from './AddItemPanel/AddItemServices'
-import { StaffItem } from '../Tabs/TabsComponents/TabsContent/TabsContentStaff'
+import { ResponseSingle, StaffItem } from '../Tabs/TabsComponents/TabsContent/TabsContentStaff'
 import { useDispatch } from 'react-redux'
 import { pushNewItemToStaffData } from '../../store/content'
 
@@ -14,7 +14,7 @@ type Props = {
 }
 
 async function addItem(data: any) {
-	fetch(`http://localhost:1337/api/staff-tables`, {
+	const response = await fetch(`http://localhost:1337/api/staff-tables`, {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -28,6 +28,7 @@ async function addItem(data: any) {
 		.catch((error) => {
 			console.log('error = ' + error)
 		})
+	return response
 }
 
 const AddItemModal = ({ changedTab }: Props) => {
@@ -36,8 +37,10 @@ const AddItemModal = ({ changedTab }: Props) => {
 
 	const [data, setData] = useState<any>(undefined)
 
-	const handleUpdate = (arg: any) => {
-		setData(arg)
+	const handleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { id } = event.target
+
+		setData({ ...data, [id]: event.target.value })
 	}
 
 	const showModal = () => {
@@ -45,11 +48,12 @@ const AddItemModal = ({ changedTab }: Props) => {
 	}
 
 	const handleOk = () => {
-		setIsModalOpen(false)
-		addItem(data).then(() => {
+		addItem(data).then((resp: ResponseSingle) => {
 			switch (changedTab) {
 				case '1': {
 					const typedData = data as StaffItem
+					typedData.id = resp.data.id
+					typedData.key = resp.data.id
 					dispatch(pushNewItemToStaffData(typedData))
 					break
 				}
@@ -58,11 +62,18 @@ const AddItemModal = ({ changedTab }: Props) => {
 					break
 				}
 			}
+
+			setIsModalOpen(false)
 		})
 	}
 
+	useEffect(() => {
+		if (!isModalOpen) {
+			setData(undefined)
+		}
+	}, [isModalOpen])
+
 	const handleCancel = () => {
-		
 		setIsModalOpen(false)
 	}
 
@@ -80,7 +91,9 @@ const AddItemModal = ({ changedTab }: Props) => {
 				cancelText='Отмена'
 			>
 				<div className='sing-in-group'>
-					{changedTab === '1' && <AddItemStaff data={data} updateData={handleUpdate} />}
+					{changedTab === '1' && (
+						<AddItemStaff isModalOpen={isModalOpen} data={data} updateData={handleUpdate} />
+					)}
 					{/* {changedTab === '2' && <AddItemServers />}
 					{changedTab === '3' && <AddItemSoftware />}
 					{changedTab === '4' && <AddItemServices />}

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { StaffItem } from '../components/Tabs/TabsComponents/TabsContent/TabsContentStaff'
-
 interface CounterState {
 	staffData: StaffItem[]
 }
@@ -8,8 +7,6 @@ interface CounterState {
 const initialState: CounterState = {
 	staffData: [],
 }
-
-type Key = String
 
 export const contentSlice = createSlice({
 	name: 'content',
@@ -21,11 +18,11 @@ export const contentSlice = createSlice({
 		setAllItemsForStaffData: (state, item: PayloadAction<StaffItem[]>) => {
 			state.staffData = item.payload
 		},
-		deleteItemForStaffData: (state, item: PayloadAction<Key>) => {
+		deleteItemForStaffData: (state, item: PayloadAction<string>) => {
 			let index = 0
 
 			state.staffData.forEach((el, idx) => {
-				if (el.key === item.payload) {
+				if (el.id === item.payload) {
 					index = idx
 				}
 			})
@@ -35,9 +32,13 @@ export const contentSlice = createSlice({
 
 			state.staffData = newStaffData
 		},
+		updateItemForStaffData: (state, item: PayloadAction<StaffItem[]>) => {
+			state.staffData = item.payload
+		},
 	},
 })
 
-export const { pushNewItemToStaffData, setAllItemsForStaffData, deleteItemForStaffData } = contentSlice.actions
+export const { pushNewItemToStaffData, setAllItemsForStaffData, deleteItemForStaffData, updateItemForStaffData } =
+	contentSlice.actions
 
 export default contentSlice.reducer
