@@ -41,6 +41,7 @@ const AddItemModal = ({ changedTab }: Props) => {
 		const { id } = event.target
 
 		setData({ ...data, [id]: event.target.value })
+		console.log(data)
 	}
 
 	const showModal = () => {
