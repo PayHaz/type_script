@@ -11,7 +11,7 @@ const SingInPanel: React.FC<Props> = ({ updateData }) => {
 		<div>
 			<Space direction='horizontal'>
 				<Input onChange={updateData} id='login' placeholder='Введите логин' prefix={<UserOutlined />} />
-				<Input.Password onChange={updateData} id='passwrodHash' placeholder='Введите пароль' />
+				<Input.Password onChange={updateData} id='passwordHash' placeholder='Введите пароль' />
 			</Space>
 		</div>
 	)

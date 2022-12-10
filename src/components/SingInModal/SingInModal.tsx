@@ -1,26 +1,27 @@
 import { Button, Modal } from 'antd'
 import React, { useState } from 'react'
 import SingInPanel from '../SingInPanel/SingInPanel'
-
 import './SingInModal.css'
 
 async function authorization(data: any) {
-	const response = await fetch(`http://localhost:1337/auth/local`, {
+	const response = await fetch(`http://localhost:1337/api/auth/local`, {
+		method: 'POST',
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-			data,
+			identifier: data.login,
+			password: data.passwordHash,
 		}),
 	})
-		.then((response) => response.json())
+		.then((response) => {
+			response.json()
+			console.log('Well done!')
+		})
 		.catch((error) => {
 			console.log('error = ' + error)
 		})
-	if (response.ok) {
-		console.log('все чётенько')
-	}
 	return response
 }
 
