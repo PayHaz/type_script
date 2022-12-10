@@ -90,6 +90,7 @@ export type ResponseSingle = {
 
 const TabsContentStaff = () => {
 	const items = useSelector((store: RootState) => store.content.staffData)
+	const user = useSelector((store: RootState) => store.authorization.value)
 	const dispatch = useDispatch()
 	const [editingKey, setEditingKey] = useState('')
 	const [form] = Form.useForm()
@@ -129,7 +130,7 @@ const TabsContentStaff = () => {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [isAuth, setIsAuth] = useState(true)
+	const [isAuth, setIsAuth] = useState(false)
 
 	async function deleteItem(id: string) {
 		fetch(`http://localhost:1337/api/staff-tables/` + id, {
@@ -295,10 +296,8 @@ const TabsContentStaff = () => {
 				address: item.attributes.address,
 			})
 		})
-
-		console.log(response)
-
 		dispatch(setAllItemsForStaffData(prepared))
+		console.log(isAuth)
 	}, [dispatch])
 
 	useEffect(() => {
@@ -308,7 +307,7 @@ const TabsContentStaff = () => {
 	return (
 		<Form form={form} component={false}>
 			<Table
-				columns={isAuth ? mergedColumns : columnsIsNotAuth}
+				columns={user > 0 ? mergedColumns : columnsIsNotAuth}
 				dataSource={items}
 				rowClassName='editable-row'
 				pagination={{
