@@ -1,14 +1,14 @@
-import { Button, Modal } from 'antd'
+import { Button, Modal, Form } from 'antd'
 import React, { useState } from 'react'
 import SingInPanel from '../SingInPanel/SingInPanel'
 import './SingInModal.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { isAuth } from '../../store/authorization'
 import { RootState } from '../../store/store'
+import Cookies from 'universal-cookie'
+import { setToken } from '../../store/token'
 
-let authStatus = 0
-
-async function authorization(data: any, dispatch: any) {
+async function authorization(data: any, dispatch: any, setData: any, setIsModalOpen: any, user: any) {
 	const response = await fetch(`http://localhost:1337/api/auth/local`, {
 		method: 'POST',
 		headers: {
@@ -16,24 +16,24 @@ async function authorization(data: any, dispatch: any) {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-			identifier: data.login,
-			password: data.passwordHash,
+			identifier: data?.login,
+			password: data?.passwordHash,
 		}),
 	})
-		.then((response) => {
-			if (response.status === 200) {
-				dispatch(isAuth(1))
-			}
-			if (response.status === 400) {
-				dispatch(isAuth(0))
-			}
-			response.json()
+	if (response.status === 200) {
+		const cookies = new Cookies()
+		response.json().then((el: any) => {
+			cookies.set('token', el?.jwt)
+			dispatch(setToken(el?.jwt))
 		})
-		.catch((error) => {
-			console.log('error = ' + error)
-			authStatus = 0
-		})
-	return response
+		dispatch(isAuth(true))
+		setData(undefined)
+		setIsModalOpen(false)
+	} else if (response.status === 400) {
+		alert('Неправильно введён логин или пароль!')
+	} else {
+		alert('Ошибка HTTP: ' + response.status)
+	}
 }
 
 const SingInModal = () => {
@@ -56,16 +56,11 @@ const SingInModal = () => {
 	}
 
 	const handleOk = () => {
-		authorization(data, dispatch)
-		//authStatus = 1
-		//dispatch(isAuth(authStatus))
-		setData(undefined)
-		setIsModalOpen(false)
+		authorization(data, dispatch, setData, setIsModalOpen, user)
 	}
 
 	const handleCancel = () => {
 		setIsModalOpen(false)
-		console.log(user)
 	}
 
 	return (
@@ -73,18 +68,26 @@ const SingInModal = () => {
 			<Button type='primary' onClick={showModal}>
 				Вход
 			</Button>
-			<Modal
-				title='Вход'
-				open={isModalOpen}
-				onOk={handleOk}
-				onCancel={handleCancel}
-				okText='Войти'
-				cancelText='Назад'
+			<Form
+				name='basic'
+				initialValues={{
+					remember: true,
+				}}
+				autoComplete='off'
 			>
-				<div className='sing-in-group'>
-					<SingInPanel data={data} updateData={handleUpdate} />
-				</div>
-			</Modal>
+				<Modal
+					title='Вход'
+					open={isModalOpen}
+					onOk={handleOk}
+					onCancel={handleCancel}
+					okText='Войти'
+					cancelText='Назад'
+				>
+					<div className='sing-in-group'>
+						<SingInPanel data={data} updateData={handleUpdate} />
+					</div>
+				</Modal>
+			</Form>
 		</div>
 	)
 }

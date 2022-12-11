@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface CounterState {
-	value: number
+	value: boolean
 }
 
-const initialState = { value: 0 } as CounterState
+const initialState = { value: false } as CounterState
 
 export const authorizationSlice = createSlice({
 	name: 'authorization',
 	initialState,
 	reducers: {
-		isAuth(state, action: PayloadAction<number>) {
-			state.value += action.payload
+		isAuth(state, action: PayloadAction<boolean>) {
+			state.value = action.payload
 		},
 	},
 })

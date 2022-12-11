@@ -298,7 +298,7 @@ const TabsContentStaff = () => {
 		})
 		dispatch(setAllItemsForStaffData(prepared))
 		console.log(isAuth)
-	}, [dispatch])
+	}, [dispatch, isAuth])
 
 	useEffect(() => {
 		backFunc()
@@ -307,7 +307,7 @@ const TabsContentStaff = () => {
 	return (
 		<Form form={form} component={false}>
 			<Table
-				columns={user > 0 ? mergedColumns : columnsIsNotAuth}
+				columns={user ? mergedColumns : columnsIsNotAuth}
 				dataSource={items}
 				rowClassName='editable-row'
 				pagination={{
